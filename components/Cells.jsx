@@ -2,37 +2,46 @@ import { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import Cell from '../components/Cell';
 
-const Cells = ({ emojis, setEmojis }) => {
-  const [choiceOne, setChoiceOne] = useState(null);
-  const [choiceTwo, setChoiceTwo] = useState(null);
+const Cells = ({ emojis, setEmojis, steps, setSteps, setGameIsFinished }) => {
+  const [chosenCell, setChosenCell] = useState(null);
+  const [secondChosenCell, setSecondChosenCell] = useState(null);
 
   useEffect(() => {
-    if (choiceOne && choiceTwo) {
-      if (choiceOne.label === choiceTwo.label) {
-        setEmojis((prevEmojis) => {
-          return prevEmojis.map((emoji) => {
-            if (emoji.label === choiceOne.label) {
-              console.log('they are same');
-              return { ...emoji, isMatched: true };
-            } else {
-              return emoji;
-            }
-          });
-        });
-        resetTrn();
-      } else {
-        resetTrn();
+    if (steps > 1) {
+      if (emojis.every((obj) => obj.isMatched === true)) {
+        setGameIsFinished(true);
       }
     }
-  }, [choiceOne, choiceTwo, setEmojis, emojis]);
+  }, [emojis]);
 
-  const resetTrn = () => {
-    setChoiceOne(null);
-    setChoiceTwo(null);
-  };
+  const handleCellClick = (emoji) => {
+    if (!chosenCell) {
+      return setChosenCell(emoji);
+    }
 
-  const handleChoice = (card) => {
-    choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
+    if (chosenCell.label === emoji.label) {
+      setSteps((prev) => prev + 1);
+      setEmojis(
+        emojis.map((obj) => {
+          if (obj.label === chosenCell.label) {
+            return { ...obj, isMatched: true };
+          }
+
+          return obj;
+        })
+      );
+      return setChosenCell(null);
+    }
+
+    if (chosenCell.label !== emoji.label) {
+      setSecondChosenCell(emoji);
+      setSteps((prev) => prev + 1);
+
+      return setTimeout(() => {
+        setSecondChosenCell(null);
+        setChosenCell(null);
+      }, 1000);
+    }
   };
 
   return (
@@ -43,9 +52,9 @@ const Cells = ({ emojis, setEmojis }) => {
             <Cell
               emoji={emoji}
               key={uuid()}
-              handleChoice={handleChoice}
-              choiceOne={choiceOne}
-              choiceTwo={choiceTwo}
+              handleCellClick={handleCellClick}
+              chosenCell={chosenCell}
+              secondChosenCell={secondChosenCell}
               flipped={emoji.isMatched}
             />
           );

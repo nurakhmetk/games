@@ -5,6 +5,8 @@ import Cells from '../components/Cells';
 
 export default function Home() {
   const [emojis, setEmojis] = useState([]);
+  const [steps, setSteps] = useState(0);
+  const [gameIsFinished, setGameIsFinished] = useState(false);
 
   const asyncFetchEmojis = async () => {
     const response = await fetch('api/emojis');
@@ -21,6 +23,8 @@ export default function Home() {
 
   const shuffleCells = () => {
     asyncFetchEmojis();
+    setSteps(0);
+    setGameIsFinished(false);
   };
 
   return (
@@ -31,15 +35,42 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <main className='w-full h-full bg-gray-700'>
-        <div className='max-w-7xl w-full h-full mx-auto flex justify-center items-center flex-col'>
-          <button
-            className='border text-white py-2 px-4 max-w-7xl mb-10'
-            onClick={shuffleCells}
-          >
-            Shuffle
-          </button>
-          <div className='max-w-xl w-full h-2/3 bg-gray-800 grid grid-cols-4 grid-rows-4 gap-1 p-1 '>
-            <Cells emojis={emojis} setEmojis={setEmojis} />
+        <div className='max-w-xl w-full h-full mx-auto flex justify-center items-center flex-col space-y-10'>
+          <div className='w-full flex justify-center items-center space-x-10'>
+            {gameIsFinished ? (
+              <div className='mx-auto text-white text-2xl font-semibold'>
+                Congrats! You've finished in{' '}
+                <span className='text-blue-500'>{steps}</span> steps!
+                <button
+                  className='ml-2 border text-white py-1 px-2 max-w-7xl text-xl hover:text-blue-500 hover:border-blue-500'
+                  onClick={shuffleCells}
+                >
+                  Start again
+                </button>
+              </div>
+            ) : (
+              <>
+                <button
+                  className='border text-white py-2 px-4 max-w-7xl'
+                  onClick={shuffleCells}
+                >
+                  Shuffle
+                </button>
+                <span className='text-white text-xl font-semibold'>
+                  Steps: {steps}
+                </span>
+              </>
+            )}
+          </div>
+
+          <div className='w-full h-2/3 bg-gray-800 grid grid-cols-4 grid-rows-4 gap-1 p-1'>
+            <Cells
+              emojis={emojis}
+              setEmojis={setEmojis}
+              setSteps={setSteps}
+              steps={steps}
+              setGameIsFinished={setGameIsFinished}
+            />
           </div>
         </div>
       </main>

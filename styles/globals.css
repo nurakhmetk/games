@@ -38,19 +38,58 @@ a {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transform: none;
   }
   .front {
-    transform: rotateY(90deg);
-    scale: 2.5;
+    transform: scaleX(-1) scale(1.2);
     cursor: pointer;
-  }
-  .flipped {
-    transform: rotateY(0deg);
     width: 100%;
     height: 100%;
   }
 
   .some {
     transform: rotateY(90deg);
+  }
+
+  .scene {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    /*   border: 1px solid #CCC; */
+    perspective: 600px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform-origin: center right;
+    transition: transform 1s;
+  }
+
+  .card.is-flipped {
+    transform: translateX(-100%) rotateY(-180deg);
+  }
+
+  .card__face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+    backface-visibility: hidden;
+  }
+
+  .card__face--front {
+    background: crimson;
+  }
+
+  .card__face--back {
+    background: slateblue;
+    transform: rotateY(180deg);
   }
 }
