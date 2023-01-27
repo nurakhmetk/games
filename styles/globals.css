@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+}
+
+body > div:first-child,
+div#__next,
+div#__next > div {
+  width: 100%;
+  min-height: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer components {
+  .one-cell {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-width: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .front {
+    transform: rotateY(90deg);
+    scale: 2.5;
+    cursor: pointer;
+  }
+  .flipped {
+    transform: rotateY(0deg);
+    width: 100%;
+    height: 100%;
+  }
+
+  .some {
+    transform: rotateY(90deg);
+  }
+}
